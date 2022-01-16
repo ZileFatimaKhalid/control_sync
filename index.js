@@ -257,6 +257,7 @@ ipcMain.on('startClient', (e, ip) => {
         settings.nickname = 'macbook';
         settings.ip = ip;
         require('./client').setup(settings);
+        require('./share-clipboard').startClient(ip);
     }
     
 })
@@ -274,6 +275,7 @@ ipcMain.on('startServer', () => {
         settings.type = 'server';
         settings.nickname = 'imac';
         require(settings.type === 'server' ? './server' : './client').setup(settings);
+        require('./share-clipboard');
 
         // server = spawn('node', ['start-server.js']);
         // server = spawn('npm', ['run', 'start-server']);

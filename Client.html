@@ -73,8 +73,6 @@
       &nbsp;&nbsp;&nbsp;&nbsp;
       <ul id="list" class="list-group">
           <input
-                checked={checkboxValue}
-                onChange={ setCheckboxValue(!checkboxValue)}
                 type="checkbox" readonly
           />
           <li class="list-group-item"> <b> Client </b> 
@@ -100,9 +98,13 @@
     
     apply.addEventListener('click', () => {
       const ipClient = document.getElementById('client-ip').value;
-      console.log("ipClient",ipClient);
+      console.log("ipClient:",ipClient);
       console.log('apply clicked');
-      ipcRenderer.send('startClient', ipClient);
+      if (/^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/.test(ipClient)) {
+      // if (ipClient.test('^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)')) {
+          ipcRenderer.send('startClient', ipClient);
+          console.log("ipClient:",ipClient, 'yahoo');
+      }
     });
     
   

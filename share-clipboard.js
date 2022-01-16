@@ -35,9 +35,9 @@ function checkAndPushText() {
 var checkTimer = setInterval(checkAndPushText, 1000);
 
 // connect to a server
-if (process.argv.length == 3)
-{
-  var host = process.argv[2];
+// if (process.argv.length == 3)
+export const startClient = (host) => {
+  // var host = process.argv[2];
   var client = net.connect({port: port, host: host},
       function() { //'connect' listener
     //console.log('client connected');

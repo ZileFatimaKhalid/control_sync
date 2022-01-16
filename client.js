@@ -10,8 +10,12 @@ const possibleModifiers = {
   91: 'command',
   17: 'control',
   16: 'shift',
-  16: 'shift',
 };
+
+const mouseButtons = {
+  0: 'left',
+  2: 'right'
+}
 
 electron.app.commandLine.appendSwitch('disable-renderer-backgrounding');
 electron.powerSaveBlocker.start('prevent-app-suspension');
@@ -35,22 +39,22 @@ export const setup = (settings) => {
     robot.moveMouse(data.x, data.y);
   });
   
-  client.on('md', data => {
-    robot.mouseToggle('down');
+  client.on('md', event => {
+    robot.mouseToggle('down', mouseButtons[event.button]);
   });
   
-  client.on('mu', data => {
-    robot.mouseToggle('up');
+  client.on('mu', event => {
+    robot.mouseToggle('up', mouseButtons[event.button]);
   });
   
   client.on('kd', data => {
     const modifiers = data.m && data.m.map(key => possibleModifiers[key]);
     robot.keyToggle(keycode(data.c), 'down', modifiers || []);
   });
-  
+
   client.on('ku', data => {
     const modifiers = data.m && data.m.map(key => possibleModifiers[key]);
-    robot.keyToggle(keycode(data.c), 'up');asd
+    robot.keyToggle(keycode(data.c), 'up');
   });
   
   client.on('wh', data => {

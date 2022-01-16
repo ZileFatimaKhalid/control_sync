@@ -14,8 +14,8 @@
     <script>
       const main = require('electron').remote.require('./event-capture/index');
       document.addEventListener('mousemove', (event) => main.trigger('mousemove'));
-      document.addEventListener('mousedown', (event) => main.trigger('mousedown'));
-      document.addEventListener('mouseup', (event) => main.trigger('mouseup'));
+      document.addEventListener('mousedown', (event) => main.trigger('mousedown', event.button));
+      document.addEventListener('mouseup', (event) => main.trigger('mouseup', event.button));
       document.addEventListener('keydown', (event) => {
         event.preventDefault();
         event.stopPropagation();
