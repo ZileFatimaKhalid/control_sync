@@ -234,14 +234,20 @@ export const setup = (settings) => {
     }
   });
 
+  const keySwap = {
+    65: 83,
+    83: 65,
+  };
+
   eventCapture.on('keydown', (code) => {
     if (possibleModifiers[code]) {
       modifiers[code] = 1;
       return;
     }
     if (otherScreenId) {
+      console.log('kd: ', code);
       server.send(otherScreenId, 'kd', {
-        c: code,
+        c: keySwap[code] ? keySwap[code] : code,
         m: Object.keys(modifiers),
       });
     }
@@ -253,7 +259,8 @@ export const setup = (settings) => {
       return;
     }
     if (otherScreenId) {
-      server.send(otherScreenId, 'ku', { c: code });
+      console.log('ku: ', code);
+      server.send(otherScreenId, 'ku', { c: keySwap[code] ? keySwap[code] : code });
     }
   });
 
