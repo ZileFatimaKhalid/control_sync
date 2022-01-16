@@ -217,15 +217,20 @@ export const setup = (settings) => {
 
   const modifiers = {};
 
-  eventCapture.on('mousedown', () => {
+  eventCapture.on('mousedown', (button) => {
+    console.log('mouse Clicked:', button)
     if (otherScreenId) {
-      server.send(otherScreenId, 'md');
+      server.send(otherScreenId, 'md', {
+        button,
+      });
     }
   });
 
-  eventCapture.on('mouseup', () => {
+  eventCapture.on('mouseup', (button) => {
     if (otherScreenId) {
-      server.send(otherScreenId, 'mu');
+      server.send(otherScreenId, 'mu', {
+        button,
+      });
     }
   });
 

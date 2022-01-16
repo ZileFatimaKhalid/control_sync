@@ -16,8 +16,8 @@ class EventCapture extends Observable {
     this.window = new BrowserWindow({
       width: 500,
       height: 500,
-      frame: true,
-      transparent: false,
+      frame: false,
+      transparent: true,
     });
     this.window.loadURL(url.format({
       pathname: path.join(__dirname, 'event-capture.html'),
