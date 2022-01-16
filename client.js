@@ -39,12 +39,12 @@ export const setup = (settings) => {
     robot.moveMouse(data.x, data.y);
   });
   
-  client.on('md', button => {
-    robot.mouseToggle('down', mouseButtons[button]);
+  client.on('md', event => {
+    robot.mouseToggle('down', mouseButtons[event.button]);
   });
   
-  client.on('mu', button => {
-    robot.mouseToggle('up', mouseButtons[button]);
+  client.on('mu', event => {
+    robot.mouseToggle('up', mouseButtons[event.button]);
   });
   
   client.on('kd', data => {
