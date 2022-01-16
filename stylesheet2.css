@@ -1,0 +1,15 @@
+.background-color{
+    background-color: #87cefa;
+}
+
+.font-color{
+    color: #ffffff;
+}
+
+.center{
+    margin: auto;
+    width: 60%;
+    border: 5px solid black;
+    padding: 10px;
+}
+

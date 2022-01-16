@@ -1,0 +1,140 @@
+#w {
+    -ms-grid-column-span: 1;
+    grid-column-end: 2;
+    -ms-grid-column: 1;
+    grid-column-start: 1;
+    -ms-grid-row-span: 1;
+    grid-row-end: 3;
+    -ms-grid-row: 2;
+    grid-row-start: 2;
+}
+
+#w {
+    -ms-grid-column-align: center;
+    justify-self: center;
+}
+
+.os-text {
+    line-height: 1.7em;
+    text-align: center;
+}
+
+.os-text {
+    padding-left: 9cm;
+    background-position: 0 50%;
+    background-size: auto;
+    background-repeat: no-repeat;
+    color: #1f2d5d;
+    line-height: 1.7em;
+    text-align: center;
+}
+
+.os-type {
+    padding-right: 0px;
+    padding-left: 0px;
+}
+
+.os-bar-syn {
+    display: -ms-grid;
+    display: grid;
+    grid-auto-columns: 1fr;
+    grid-column-gap: 16px;
+    grid-row-gap: 0px;
+    -ms-grid-columns: 1fr 1fr;
+    grid-template-columns: 1fr 1fr;
+    -ms-grid-rows: auto;
+    grid-template-rows: auto;
+}
+
+.os-bar-syn {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    padding-top: 8px;
+    padding-bottom: 8px;
+    grid-auto-columns: 1fr;
+    -ms-grid-columns: 1fr 1fr 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    -ms-grid-rows: auto;
+    grid-template-rows: auto;
+    border-radius: 6px;
+    background-color: #f2f2f2;
+}
+
+.lp-btn.btn-movie {
+    margin-left: 24px;
+    padding-right: 48px;
+    padding-left: 76px;
+    border: 2px solid #3c9;
+    background-color: transparent;
+    background-position: 24px 50%;
+    background-size: auto;
+    background-repeat: no-repeat;
+    color: #22ac7e;
+    text-decoration: none;
+}
+
+.lp-btn {
+    height: 60px;
+    margin-top: 28px;
+    margin-bottom: 16px;
+    padding: 19px 48px 11px;
+    border-radius: 6px;
+    background-color: #ff7c00;
+    font-family: Manrope,sans-serif;
+    color: #fff;
+    font-size: 18px;
+    line-height: 1em;
+    font-weight: 700;
+}
+
+video {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    min-width: 100%;
+    min-height: 100%;
+    z-index: -1;
+    -webkit-transition: all 1s;
+    -moz-transition: all 1s;
+    -o-transition: all 1s;
+    transition: all 1s;
+  }
+
+  btn {
+    background-color: #666;
+    border: medium none;
+    color: #fff;
+    display: block;
+    font-size: 18px;
+    left: 0;
+    margin: 0 auto;
+    padding: 8px 16px;
+    position: absolute;
+    right: 0;
+    top: 50%;
+}
+
+button.active {
+    background-color: #0077a2;
+  }
+
+.flex-container {
+    display: flex;
+}
+
+.flex-child {
+    flex: 1;
+    border: 2px solid yellow;
+}  
+
+.flex-child:first-child {
+    margin-right: 20px;
+} 
+
+.background-color{
+    background-color: #87cefa;
+}
