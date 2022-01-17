@@ -1,14 +1,9 @@
 import robot from 'robotjs';
 import Messages from './messages';
-// import settings from './settings';
 import log from './log';
-
 import eventCapture from './event-capture';
-// import {clipboard} from "electron";
 
 export const setup = (settings) => {
-  /* read the screen configuration file */
-
   const screenConfig = require(settings.screenConfig);
 
   if (!screenConfig) {
@@ -18,7 +13,6 @@ export const setup = (settings) => {
         true // fatal, will exit when true
     );
   }
-  /* read the screen configuration for the server screen */
 
   const serverScreenConfig = screenConfig[settings.nickname];
 
@@ -33,9 +27,6 @@ export const setup = (settings) => {
         true
     );
   }
-
-  /* the objects representing up/down/left/right rules for the server screen (for performance) */
-
   const right = serverScreenConfig.right;
 
 
@@ -74,16 +65,6 @@ export const setup = (settings) => {
 
   const server = new Messages(settings.port);
 
-  /**
-   * Manage nicknames. Each computer has a unique int id for each other computer it can talk to that
-   * the Messages class facilitates for us, but the screen configuration file uses human names
-   * for each screen (i.e. "imac" or "macbook"). When a client connects to us it will tell
-   * us what its nickname is and we will map it to the int id for that client that the
-   * Messages class assigned. That way, when a rule in the screen config file
-   * gets triggered we will be able to map the human readable nickname in
-   * the config file to the appropriate int id from the Messages class.
-   **/
-
   const nicknames = {};
   server.on('REQUEST_NICKNAME', data => {
     log('SET_NICKNAME', `set nickname for id ${data.id} to ${data.nickname}`);
@@ -110,11 +91,6 @@ export const setup = (settings) => {
     }
   }, 0);
 
-  /**
-   * On screen movements are pretty simple. We check to make sure the cursor has not left
-   * the server's screen and if it has we trigger setupOffScreen
-   **/
-
   function handleOnScreenMouseMovement(pos) {
     const isRight = (right && pos.x >= right.right && pos.y >= right.top && pos.y <= right.bottom);
     const newMode = isRight ? MODES.OFFSCREEN : MODES.ONSCREEN;
@@ -123,16 +99,6 @@ export const setup = (settings) => {
       setupOffScreen({ isRight, pos });
     }
   }
-
-  /**
-   * off screen movements are slightly more complicated. We still make sure the cursor has
-   * not left the client's screen (and if so we trigger setupOnScreen) but we also have
-   * to constantly reset the server's mouse position back to (500, 500) because the
-   * way we track how far the user has moved the mouse is that every time the
-   * user moves their mouse, we set it back to (500, 500) and we observe
-   * the displacement from this position, then we send it off to the
-   * client
-   **/
 
   function handleOffscreenMouseMovement(pos) {
     deltaX += pos.x - 500;
@@ -147,13 +113,6 @@ export const setup = (settings) => {
       setupOnScreen({ isLeft, pos });
     }
   }
-
-  /**
-   * A helper method that, when given the nickname for a screen, will go out and extract
-   * the config properties for that screen into local variables. As mentioned earlier
-   * this is for performance, as dot notation on an object (i.e. config.someProp) is
-   * slightly slower on average than just accessing someProp as a local variable.
-   **/
 
   function setOffScreenPropertiesForNickname(nickname) {
     if (!screenConfig[nickname]) {
@@ -170,12 +129,6 @@ export const setup = (settings) => {
     otherScreenId = nicknames[nickname];
   }
 
-  /**
-   * Calculate if we moved off the server screen on the top, bottom, left or right and
-   * set that screen to be the "otherScreen" and also calculate where we have to
-   * put the cursor
-   **/
-
   function setupOffScreen(location) {
     if (location.isRight) {
       setOffScreenPropertiesForNickname(right.name);
@@ -186,11 +139,6 @@ export const setup = (settings) => {
     robot.moveMouse(500, 500);
     eventCapture.start();
   }
-
-  /**
-   * determine which side of the screen we have just entered on and set the cursor to
-   * that corresponding spot
-   **/
 
   function setupOnScreen(location) {
     let x = 0, y = 0;
@@ -203,10 +151,6 @@ export const setup = (settings) => {
     eventCapture.stop();
     otherScreenId = null;
   }
-
-  /**
-   * Forward mouse, key and scroll events to the active client
-   **/
 
   const possibleModifiers = {
     18: 'alt',
@@ -267,44 +211,6 @@ export const setup = (settings) => {
   eventCapture.on('scroll', (data) => {
     if (otherScreenId) {
       server.send(otherScreenId, 'wh', { y: data.deltaY });
-    }
-  });
-
-// broadcast the data
-  eventCapture.on('data', function (chunk) {
-    for(var i=0; i<client.length; i++)
-    {
-      var client = client[i];
-      if (client != socket)
-      {
-        console.log('write to client');
-        client.write(chunk, 'cp');
-      }
-    }
-  });
-
-  const { clipboard } = require('electron');
-  let clipboardData = clipboard.readText();
-
-  setInterval(() => {
-    if (otherScreenId) {
-      const temp = clipboard.readText();
-      if (temp !== clipboardData) {
-        clipboardData = temp;
-        server.send(otherScreenId, 'cp', { data: clipboardData });
-      }
-    }
-  }, 0);
-
-
-// error handling
-  eventCapture.on('error', function(err) {
-    console.log('Caught error');
-    var index = clients.indexOf(socket);
-    if (index > -1)
-    {
-      console.log('remove client');
-      clients.splice(index, 1);
     }
   });
 }

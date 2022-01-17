@@ -3,28 +3,7 @@ import Observable from '../observable';
 import interfaces from './interfaces';
 import log from '../log';
 
-/**
- * This is my attempt at building a light weight messaging protocol on top of UDP.
- * Once connected to another node, either node may be a sender or receiver.
- * Senders assign unique integers to receivers, and receivers assign their
- * own unique id to senders. The message payload contains the id that
- * the receiver assigned to the sender, so that the receiver always
- * knows who is sending it a message.
- *
- * Messages may be sent by invoking the instance.send(...) message with params:
- * id - that we (the sender) assigned to the receiver during the handshake
- * type - the (string) type/name of the message being sent
- * message - the (object) message being sent along
- **/
-
 class Messages extends Observable {
-
-  /**
-   * Create a Messages communication channel. You may bind it to a port and interface
-   * @param {Number} port - the port to bind to
-   * @param {String|null} bind_interface - (optional) the interface ipv4 address to bind to, default is 0.0.0.0
-   **/
-
   constructor(port, bind_interface = '0.0.0.0') {
     super();
 
@@ -47,17 +26,6 @@ class Messages extends Observable {
     this.on(this, 'assignId', this._handleAssignId.bind(this));
   }
 
-  /**
-   * Transmit a message to another node. The payload consists of the `message` being sent, the `type`
-   * of event being sent, as well as the `id` that the receiving node has assigned TO US. Sending
-   * their ID that they assigned to us is important so that they know which node is sending
-   * them a message.
-   * @param {client_id} Number - the id of the other node
-   * @param {type} String - a unique if for this type of message (that the other node may listen for)
-   * @param {Object} message - the payload to transmit to the other node
-   * @return {void} there is no confirmation or notice upon errors
-   **/
-
   send(client_id, type, message = {}) {
     const connection = this.peers[client_id];
     if (!connection) {
@@ -67,13 +35,6 @@ class Messages extends Observable {
     message.id = connection.inId;
     connection.send(message);
   }
-
-  /**
-   * connect to another node
-   * @param {String} ip - the ipv4 address of the other node
-   * @param {Number} port - the port of the other node
-   * @return {Object} object representing other node
-   **/
 
   connect(ip, port) {
     const connection = punt.connect(`${ip}:${port}`);
@@ -92,14 +53,6 @@ class Messages extends Observable {
     return peer;
   }
 
-  /**
-   * This handles an incoming connection request. The requester has sent us a list of
-   * all their interfaces, and port. We will send one message to each interface
-   * in the hopes that we make contact with the requester. The requester
-   * has also sent us `id` which is the requester's id for us. We
-   * send that back too so they can identify us.
-   **/
-
   _handleIntroduction(message) {
     log('GOT_HANDSHAKE', `introduced to ${message.interfaces.join(',')}:${message.port} who assigned me id ${message.id}`);
     message.interfaces.forEach(current_interface => {
@@ -112,14 +65,6 @@ class Messages extends Observable {
       });
     });
   }
-
-  /**
-   * This handler runs after we (the sender) have just sent another node a list of
-   * interfaces that we might be bound to. If this fires, it means a node we
-   * just tried to connect to has successfully found an interface to reach
-   * us on. We mark their connection as resolved and reply with the
-   * interface that made it through.
-   **/
 
   _handleConnectionProbe(message) {
     const connection = this.peers[message.id];
@@ -135,16 +80,6 @@ class Messages extends Observable {
       port: message.port,
     });
   }
-
-  /**
-   * This runs after we (the receiver) have just sent a message to each interface
-   * of another node, and that node detected the message and is replying to let
-   * us know which interface to use to contact them. We now have a two way
-   * channel between us (the receiver) and them (the sender). We now
-   * assign our own unique id to the sender, we track which id they
-   * have assigned to us, and we reply to the sender with both
-   * our id for them, and their id for us.
-   **/
 
   _handleProbeReply(message) {
     log('CONNETED', `resolved ip for ${message.interface}:${message.port} who assigned me ID ${message.id}`);
@@ -171,13 +106,6 @@ class Messages extends Observable {
     });
     this.trigger('INCOMING_CONNECTION', { id: myId });
   }
-
-  /**
-   * This handler runs when another node has finished connecting to us, and has
-   * assigned their own unique identifier for us. We track this id for later
-   * when we want to send that node a message (so that they know who is
-   * messaging them)
-   **/
 
   _handleAssignId(message) {
     const connection = this.peers[message.id];

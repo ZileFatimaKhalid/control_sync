@@ -2,7 +2,6 @@ import robot from 'robotjs';
 import keycode from 'keycode';
 import electron from 'electron';
 import Messages from './messages';
-// import settings from './settings';
 import log from './log';
 
 const possibleModifiers = {
@@ -60,20 +59,4 @@ export const setup = (settings) => {
   client.on('wh', data => {
     robot.scrollMouse(data.x || 0, data.y || 0);
   });
-  
-  // const { clipboard } = electron;
-  
-  client.on('cp', data => {
-    //  if (data.data) clipboard.writeText(data.data);
-   })
-  
-   function promiseSetClipboardOnServer(client, server) {
-    return new Promise((resolve, reject) => {
-      const socket = server.sockets.connected[client.id];
-      socket.on('paste', text => {
-        resolve(text);
-      });
-      client.emit('paste', testData2);
-    });
-  }
 }

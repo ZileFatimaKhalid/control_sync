@@ -36,7 +36,6 @@ class EventCapture extends Observable {
     this.window = null;
     this.createWindow.bind(this);
     this.createWindow();
-    // app.on('ready', this.createWindow.bind(this));
     app.on('window-all-closed', function () {
       if (process.platform !== 'darwin') {
         app.quit();
